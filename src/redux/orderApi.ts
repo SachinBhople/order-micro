@@ -73,6 +73,9 @@ export const orderApi = createApi({
         return {
             placeOrder: builder.mutation<ProductRequest, any>({
                 query: productData => {
+                    const user: Storage | null = localStorage.getItem("user")
+                        ? JSON.parse(localStorage.getItem("user") || "{}")
+                        : null;
                     return {
                         url: `/place-order`,
                         method: "POST",
@@ -136,6 +139,9 @@ export const orderApi = createApi({
             }),
             getAllOrders: builder.query<{ message: string, result: Order[] }, void>({
                 query: () => {
+                    const user: Storage | null = localStorage.getItem("user")
+                        ? JSON.parse(localStorage.getItem("user") || "{}")
+                        : null;
                     return {
                         url: `/order`,
                         method: "GET",
