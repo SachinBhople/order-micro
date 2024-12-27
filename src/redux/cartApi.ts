@@ -40,13 +40,7 @@ export interface Cartinfo {
     pId: string,
 }
 
-// export interface OrderItem {
-//     image: string,
-//     name: string,
-//     qty: number,
-//     price: number
 
-// }
 
 export interface IProduct {
     _id: string;
@@ -59,7 +53,9 @@ export interface IProduct {
     active: boolean;
     pId: string
 }
-
+const user: Storage | null = localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user") || "{}")
+    : null;
 
 
 
@@ -74,7 +70,10 @@ export const cartApi = createApi({
                 query: () => {
                     return {
                         url: `/get-all-products`,
-                        method: "GET"
+                        method: "GET",
+                        headers: {
+                            Authorization: user?.token // Include the token as a Bearer token
+                        },
                     }
                 },
                 providesTags: ["cart"],
@@ -111,7 +110,10 @@ export const cartApi = createApi({
                     return {
                         url: "/add-product",
                         method: "POST",
-                        body: productData
+                        body: productData,
+                        headers: {
+                            Authorization: user?.token // Include the token as a Bearer token
+                        },
                     }
                 },
                 invalidatesTags: ["cart"]
@@ -121,7 +123,9 @@ export const cartApi = createApi({
                     return {
                         url: `/delete-product/${id}`,
                         method: "DELETE",
-
+                        headers: {
+                            Authorization: user?.token // Include the token as a Bearer token
+                        },
                     }
                 },
                 invalidatesTags: ["cart"]
@@ -131,6 +135,9 @@ export const cartApi = createApi({
                     return {
                         url: `/delete-all-products`,
                         method: "DELETE",
+                        headers: {
+                            Authorization: user?.token // Include the token as a Bearer token
+                        },
 
                     }
                 },
@@ -141,7 +148,10 @@ export const cartApi = createApi({
                     return {
                         url: `/place-order`,
                         method: "POST",
-                        body: productData
+                        body: productData,
+                        headers: {
+                            Authorization: user?.token // Include the token as a Bearer token
+                        },
 
                     }
                 },

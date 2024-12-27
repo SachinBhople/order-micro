@@ -60,7 +60,9 @@ export interface Order {
 
 }
 
-
+const user: Storage | null = localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user") || "{}")
+    : null;
 
 export const orderApi = createApi({
     reducerPath: "orderApi",
@@ -74,7 +76,10 @@ export const orderApi = createApi({
                     return {
                         url: `/place-order`,
                         method: "POST",
-                        body: productData
+                        body: productData,
+                        headers: {
+                            Authorization: user?.token // Include the token as a Bearer token
+                        },
 
                     }
                 },
@@ -134,6 +139,9 @@ export const orderApi = createApi({
                     return {
                         url: `/order`,
                         method: "GET",
+                        headers: {
+                            Authorization: user?.token // Include the token as a Bearer token
+                        },
                     }
                 },
                 transformResponse: (data: { message: string, result: Order[] }) => {
