@@ -57,23 +57,32 @@ const user: Storage | null = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user") || "{}")
     : null;
 
+// console.log();
 
 
 export const cartApi = createApi({
     reducerPath: "cartApi",
     // baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000/api/cart", credentials: "include" }),
-    baseQuery: fetchBaseQuery({ baseUrl: "https://order-server-six.vercel.app/api/cart", credentials: "include" }),
+    baseQuery: fetchBaseQuery({
+        baseUrl: "https://order-server-six.vercel.app/api/cart", credentials: "include", prepareHeaders: (headers) => {
+            if (user?.token) {
+                headers.set("Authorization", user?.token)
+            }
+            return headers;
+        },
+    },),
     tagTypes: ["cart"],
     endpoints: (builder) => {
         return {
             getcartProduct: builder.query<{ message: string, result: Cartinfo[] }, void>({
                 query: () => {
                     return {
+
                         url: `/get-all-products`,
                         method: "GET",
-                        headers: {
-                            Authorization: user?.token // Include the token as a Bearer token
-                        },
+                        // headers: {
+                        //     Authorization: user?.token // Include the token as a Bearer token
+                        // },
                     }
                 },
                 providesTags: ["cart"],
@@ -111,9 +120,9 @@ export const cartApi = createApi({
                         url: "/add-product",
                         method: "POST",
                         body: productData,
-                        headers: {
-                            Authorization: user?.token // Include the token as a Bearer token
-                        },
+                        // headers: {
+                        //     Authorization: user?.token // Include the token as a Bearer token
+                        // },
                     }
                 },
                 invalidatesTags: ["cart"]
@@ -123,9 +132,9 @@ export const cartApi = createApi({
                     return {
                         url: `/delete-product/${id}`,
                         method: "DELETE",
-                        headers: {
-                            Authorization: user?.token // Include the token as a Bearer token
-                        },
+                        // headers: {
+                        //     Authorization: user?.token // Include the token as a Bearer token
+                        // },
                     }
                 },
                 invalidatesTags: ["cart"]
@@ -135,9 +144,9 @@ export const cartApi = createApi({
                     return {
                         url: `/delete-all-products`,
                         method: "DELETE",
-                        headers: {
-                            Authorization: user?.token // Include the token as a Bearer token
-                        },
+                        // headers: {
+                        //     Authorization: user?.token // Include the token as a Bearer token
+                        // },
 
                     }
                 },
@@ -149,9 +158,9 @@ export const cartApi = createApi({
                         url: `/place-order`,
                         method: "POST",
                         body: productData,
-                        headers: {
-                            Authorization: user?.token // Include the token as a Bearer token
-                        },
+                        // headers: {
+                        //     Authorization: user?.token // Include the token as a Bearer token
+                        // },
 
                     }
                 },
