@@ -57,32 +57,27 @@ const user: Storage | null = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user") || "{}")
     : null;
 
-// console.log();
 
 
 export const cartApi = createApi({
     reducerPath: "cartApi",
     // baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000/api/cart", credentials: "include" }),
-    baseQuery: fetchBaseQuery({
-        baseUrl: "https://order-server-six.vercel.app/api/cart", credentials: "include", prepareHeaders: (headers) => {
-            if (user?.token) {
-                headers.set("Authorization", user?.token)
-            }
-            return headers;
-        },
-    },),
+    baseQuery: fetchBaseQuery({ baseUrl: "https://order-server-six.vercel.app/api/cart", credentials: "include" },),
     tagTypes: ["cart"],
     endpoints: (builder) => {
         return {
             getcartProduct: builder.query<{ message: string, result: Cartinfo[] }, void>({
                 query: () => {
-                    return {
+                    const user: Storage | null = localStorage.getItem("user")
+                        ? JSON.parse(localStorage.getItem("user") || "{}")
+                        : null;
 
+                    return {
                         url: `/get-all-products`,
                         method: "GET",
-                        // headers: {
-                        //     Authorization: user?.token // Include the token as a Bearer token
-                        // },
+                        headers: {
+                            Authorization: user?.token // Include the token as a Bearer token
+                        },
                     }
                 },
                 providesTags: ["cart"],
@@ -116,37 +111,49 @@ export const cartApi = createApi({
             }),
             addtoCart: builder.mutation({
                 query: productData => {
+                    const user: Storage | null = localStorage.getItem("user")
+                        ? JSON.parse(localStorage.getItem("user") || "{}")
+                        : null;
+
                     return {
                         url: "/add-product",
                         method: "POST",
                         body: productData,
-                        // headers: {
-                        //     Authorization: user?.token // Include the token as a Bearer token
-                        // },
+                        headers: {
+                            Authorization: user?.token // Include the token as a Bearer token
+                        },
                     }
                 },
                 invalidatesTags: ["cart"]
             }),
             deleteItemFromCart: builder.mutation({
                 query: (id) => {
+                    const user: Storage | null = localStorage.getItem("user")
+                        ? JSON.parse(localStorage.getItem("user") || "{}")
+                        : null;
+
                     return {
                         url: `/delete-product/${id}`,
                         method: "DELETE",
-                        // headers: {
-                        //     Authorization: user?.token // Include the token as a Bearer token
-                        // },
+                        headers: {
+                            Authorization: user?.token // Include the token as a Bearer token
+                        },
                     }
                 },
                 invalidatesTags: ["cart"]
             }),
             emptyCart: builder.mutation<void, void>({
                 query: () => {
+                    const user: Storage | null = localStorage.getItem("user")
+                        ? JSON.parse(localStorage.getItem("user") || "{}")
+                        : null;
+
                     return {
                         url: `/delete-all-products`,
                         method: "DELETE",
-                        // headers: {
-                        //     Authorization: user?.token // Include the token as a Bearer token
-                        // },
+                        headers: {
+                            Authorization: user?.token // Include the token as a Bearer token
+                        },
 
                     }
                 },
@@ -154,13 +161,17 @@ export const cartApi = createApi({
             }),
             placeOrder: builder.mutation<Product, ProductRequest>({
                 query: productData => {
+                    const user: Storage | null = localStorage.getItem("user")
+                        ? JSON.parse(localStorage.getItem("user") || "{}")
+                        : null;
+
                     return {
                         url: `/place-order`,
                         method: "POST",
                         body: productData,
-                        // headers: {
-                        //     Authorization: user?.token // Include the token as a Bearer token
-                        // },
+                        headers: {
+                            Authorization: user?.token // Include the token as a Bearer token
+                        },
 
                     }
                 },
